@@ -1,24 +1,27 @@
 using StatePattern.Enemy;
+using UnityEngine;
 
 namespace StatePattern.State.ConcreteState
 {
     public class IdleState : IState
     {
-        public OnePunchManController Owner { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public OnePunchManController Owner { get; set; }
+        private OnePunchManStateMachine stateMachine;
+        private float timer;
 
-        public void OnStateEnter()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IdleState(OnePunchManStateMachine stateMachine) => this.stateMachine = stateMachine;
 
-        public void OnStateExit()
-        {
-            throw new System.NotImplementedException();
-        }
+        public void OnStateEnter() => ResetTimer();
 
         public void Update()
         {
-            throw new System.NotImplementedException();
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+                stateMachine.ChangeState(OnePunchManStates.ROTATING);
         }
+
+        public void OnStateExit() => timer = 0;
+
+        private void ResetTimer() => timer = Owner.Data.IdleTime;
     }
 }

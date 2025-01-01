@@ -1,24 +1,29 @@
 using StatePattern.Enemy;
+using UnityEngine;
 
 namespace StatePattern.State.ConcreteState
 {
     public class RotatingState : IState
     {
-        public OnePunchManController Owner { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public OnePunchManController Owner { get; set; }
+        private OnePunchManStateMachine stateMachine;
+        private float targetRotation;
 
-        public void OnStateEnter()
-        {
-            throw new System.NotImplementedException();
-        }
+        public RotatingState(OnePunchManStateMachine stateMachine) => this.stateMachine = stateMachine;
 
-        public void OnStateExit()
-        {
-            throw new System.NotImplementedException();
-        }
+        public void OnStateEnter() => targetRotation = (Owner.Rotation.eulerAngles.y + 180) % 360;
 
         public void Update()
         {
-            throw new System.NotImplementedException();
+            Owner.SetRotation(CalculateRotation());
+            if (IsRotationComplete())
+                stateMachine.ChangeState(OnePunchManStates.IDLE);
         }
+
+        public void OnStateExit() => targetRotation = 0;
+
+        private Vector3 CalculateRotation() => Vector3.up * Mathf.MoveTowardsAngle(Owner.Rotation.eulerAngles.y, targetRotation, Owner.Data.RotationSpeed * Time.deltaTime);
+
+        private bool IsRotationComplete() => Mathf.Abs(Mathf.Abs(Owner.Rotation.eulerAngles.y) - Mathf.Abs(targetRotation)) < Owner.Data.RotationThreshold;
     }
 }
