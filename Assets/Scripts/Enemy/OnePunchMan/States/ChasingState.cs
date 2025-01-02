@@ -1,18 +1,50 @@
+using StatePattern.Main;
+using StatePattern.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChasingState : MonoBehaviour
+namespace StatePattern.Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ChasingState : IState
     {
-        
-    }
+        public EnemyController Owner { get ; set ; }
+        private IStateMachine stateMachine;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private PlayerController target;
+
+        public ChasingState(IStateMachine stateMachine) => this.stateMachine = stateMachine;
+
+        public void OnStateEnter()
+        {
+            SetTarget();
+            SetStoppingDistance();
+        }
+
+        public void Update()
+        {
+            MoveTowardsTarget();
+            if (ReachedTarget())
+            {
+                ResetPath();
+                stateMachine.ChangeState(States.SHOOTING);
+            }
+        }
+
+        public void OnStateExit() => target = null;
+
+        private void SetTarget() => target = GameService.Instance.PlayerService.GetPlayer();
+
+        private void SetStoppingDistance() => Owner.Agent.stoppingDistance = Owner.Data.PlayerStoppingDistance;
+
+        private void MoveTowardsTarget() => Owner.Agent.SetDestination(target.Position);
+
+        private bool ReachedTarget() => Owner.Agent.remainingDistance <= Owner.Agent.stoppingDistance;
+
+        private void ResetPath()
+        {
+            Owner.Agent.isStopped = true;
+            Owner.Agent.ResetPath();
+        }
     }
 }
