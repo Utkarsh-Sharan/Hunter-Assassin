@@ -1,3 +1,4 @@
+using StatePattern.StateMachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace StatePattern.Enemy
             MoveTowardsDestination();
         }
 
-        void IState.Update()
+        public void Update()
         {
             if (ReachedDestination())
                 stateMachine.ChangeState(States.IDLE);

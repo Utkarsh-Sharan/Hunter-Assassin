@@ -1,3 +1,4 @@
+using StatePattern.StateMachine;
 using System.Collections.Generic;
 
 namespace StatePattern.Enemy
@@ -17,10 +18,10 @@ namespace StatePattern.Enemy
 
         private void CreateState()
         {
-            States.Add(Enemy.States.IDLE, new IdleState(this));
-            States.Add(Enemy.States.PATROLLING, new PatrollingState(this));
-            States.Add(Enemy.States.CHASING, new ChasingState(this));
-            States.Add(Enemy.States.SHOOTING, new ShootingState(this));
+            States.Add(StateMachine.States.IDLE, new IdleState(this));
+            States.Add(StateMachine.States.PATROLLING, new PatrollingState(this));
+            States.Add(StateMachine.States.CHASING, new ChasingState(this));
+            States.Add(StateMachine.States.SHOOTING, new ShootingState(this));
         }
 
         private void SetOwner()
