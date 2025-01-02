@@ -1,18 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using StatePattern.Player;
 
-public class PatrolManController : MonoBehaviour
+namespace StatePattern.Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+    public class PatrolManController : EnemyController
     {
-        
-    }
+        private PatrolManStateMachine stateMachine;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public PatrolManController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
+        {
+            enemyView.SetController(this);
+            CreateStateMachine();
+            stateMachine.ChangeState(States.IDLE);
+        }
+
+        private void CreateStateMachine() => stateMachine = new PatrolManStateMachine(this);
+
+        public override void UpdateEnemy()
+        {
+            if (currentState == EnemyState.DEACTIVE)
+                return;
+
+            stateMachine.Update();
+        }
+
+        public override void PlayerEnteredRange(PlayerController targetToSet)
+        {
+            base.PlayerEnteredRange(targetToSet);
+            stateMachine.ChangeState(States.CHASING);
+        }
+
+        public override void PlayerExitedRange() => stateMachine.ChangeState(States.IDLE);
     }
 }
