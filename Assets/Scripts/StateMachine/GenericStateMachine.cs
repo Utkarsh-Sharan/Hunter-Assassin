@@ -30,4 +30,13 @@ namespace StatePattern.StateMachine
             }
         }
     }
+
+    public enum States
+    {
+        IDLE,
+        CHASING,
+        PATROLLING,
+        SHOOTING,
+        ROTATING
+    }
 }
