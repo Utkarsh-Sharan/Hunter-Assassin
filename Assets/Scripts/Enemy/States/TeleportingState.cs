@@ -35,12 +35,12 @@ namespace StatePattern.Enemy
 
         public void Update()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnStateExit()
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }
