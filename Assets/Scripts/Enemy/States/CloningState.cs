@@ -1,9 +1,5 @@
 using StatePattern.Main;
 using StatePattern.StateMachine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
 
 namespace StatePattern.Enemy
 {
@@ -16,15 +12,16 @@ namespace StatePattern.Enemy
 
         public void OnStateEnter()
         {
-            CreateClones();
+            CreateClone();
+            CreateClone();
         }
 
-        private void CreateClones()
+        private void CreateClone()
         {
-            for (int i = 0; i < Owner.Data.numberOfClones; ++i)
-            {
-                EnemyController hitManController = GameService.Instance.EnemyService.CreateEnemy(Owner.Data) as HitManController;
-            }
+            CloneManController clone = GameService.Instance.EnemyService.CreateEnemy(Owner.Data) as CloneManController;
+            clone.SetCloneCount((Owner as CloneManController).CloneCountLeft - 1);
+            clone.Teleport();
+            GameService.Instance.EnemyService.AddEnemy(clone);
         }
 
         public void Update()

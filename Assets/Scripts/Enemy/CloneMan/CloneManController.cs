@@ -1,18 +1,26 @@
+
 using StatePattern.Player;
 using StatePattern.StateMachine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace StatePattern.Enemy
 {
     public class CloneManController : EnemyController
     {
         private CloneManStateMachine stateMachine;
+        public int CloneCountLeft { get; private set; }
 
         public CloneManController(EnemyScriptableObject enemyScriptableObject) : base(enemyScriptableObject)
         {
+            SetCloneCount(enemyScriptableObject.numberOfClones);
             enemyView.SetController(this);
             CreateStateMachine();
             stateMachine.ChangeState(States.IDLE);
         }
+
+        public void SetCloneCount(int cloneCountToSet) => CloneCountLeft = cloneCountToSet;
 
         private void CreateStateMachine() => stateMachine = new CloneManStateMachine(this);
 
@@ -22,12 +30,6 @@ namespace StatePattern.Enemy
                 return;
 
             stateMachine.Update();
-        }
-
-        public override void Shoot()
-        {
-            base.Shoot();
-            stateMachine.ChangeState(States.TELEPORTING);
         }
 
         public override void PlayerEnteredRange(PlayerController targetToSet)
@@ -40,8 +42,11 @@ namespace StatePattern.Enemy
 
         public override void Die()
         {
-            stateMachine.ChangeState(States.CLONING);
+            if (CloneCountLeft > 0)
+                stateMachine.ChangeState(States.CLONING);
             base.Die();
         }
+
+        public void Teleport() => stateMachine.ChangeState(States.TELEPORTING);
     }
 }

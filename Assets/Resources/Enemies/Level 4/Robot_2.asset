@@ -20,7 +20,7 @@ MonoBehaviour:
   MovementSpeed: 1.5
   MaximumHealth: 10
   RangeRadius: 6
-  TeleportingRadius: 0
+  TeleportingRadius: 5
   IdleTime: 3
   RotationSpeed: 100
   RotationThreshold: 0.5
@@ -34,4 +34,4 @@ MonoBehaviour:
   - {x: -8, y: 1.5, z: 3}
   - {x: -5, y: 1.5, z: 7}
   PlayerStoppingDistance: 3
-  numberOfClones: 3
+  numberOfClones: 2
